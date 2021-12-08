@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater,null,false)
         popupBinding = ItemPopupBinding.inflate(layoutInflater,binding.root,false)
         setContentView(binding.root)
-        toolTipPopup = ToolTipPopup(context = this,"sssssssssㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ")
+        toolTipPopup = ToolTipPopup(context = this,"sssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasfsfdsdfsfd\nsfd\nsdfa`\na")
         binding.testButton.setOnClickListener {
             toolTipPopup.showAlignTop(binding.testButton)
         }
