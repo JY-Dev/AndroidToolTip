@@ -10,6 +10,6 @@
         android:layout_height="6dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/ic_triangle"/>
+        android:background="@drawable/ic_tooltip_head"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

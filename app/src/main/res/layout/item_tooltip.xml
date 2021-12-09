@@ -9,7 +9,7 @@
         android:layout_width="9dp"
         android:layout_height="6dp"
         android:rotation="0"
-        android:background="@drawable/ic_triangle"/>
+        android:background="@drawable/ic_tooltip_head"/>
 
     <TextView
         android:id="@+id/tooltip_text"

@@ -35,7 +35,7 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
     private val tooltipDrawable = (ContextCompat.getDrawable(context,R.drawable.tooltip_background) as GradientDrawable).apply {
         setColor(tooltipColor)
     }
-    private val tooltipHeadDrawable = (ContextCompat.getDrawable(context,R.drawable.ic_triangle) as VectorDrawable).apply {
+    private val tooltipHeadDrawable = (ContextCompat.getDrawable(context,R.drawable.ic_tooltip_head) as VectorDrawable).apply {
         setTint(tooltipColor)
     }
     private val tooltipHeadWidth = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipHeadWidth,9.toDp)
