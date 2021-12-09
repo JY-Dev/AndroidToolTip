@@ -15,5 +15,10 @@
         <attr name="tooltipColor" format="color"/>
         <attr name="tooltipHeadWidth" format="dimension"/>
         <attr name="tooltipHeadHeight" format="dimension"/>
+        <attr name="tooltipMaxWidth" format="dimension"/>
+    </declare-styleable>
+    
+    <declare-styleable name="TimerTooltip">
+        <attr name="timerSecond" format="integer"/>
     </declare-styleable>
 </resources>

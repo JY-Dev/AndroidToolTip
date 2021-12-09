@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 
-class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null) :
+open class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null) :
     FrameLayout(context, attributeSet) {
     private val attr =
         context.theme.obtainStyledAttributes(attributeSet, R.styleable.ToolTipView, 0, 0)
@@ -40,6 +40,7 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
     }
     private val tooltipHeadWidth = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipHeadWidth,9.toDp)
     private val tooltipHeadHeight = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipHeadHeight,6.toDp)
+    private val tooltipMaxWidth = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipMaxWidth,256.toDp)
 
     private val tooltipView = FrameLayout(context).apply {
         visibility = GONE
@@ -119,6 +120,7 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT
             )
+            maxWidth = tooltipMaxWidth
             text = tooltipViewText
             setTextColor(tooltipTextColor)
             setPadding(tooltipPadding,tooltipPadding,tooltipPadding,tooltipPadding)
@@ -141,7 +143,7 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
         tooltipTextView.text = text
     }
 
-    fun setTooltipVisibility() {
+    open fun setTooltipVisibility() {
         tooltipView.visibility = if (isVisible) View.GONE else View.VISIBLE
         isVisible = !isVisible
     }

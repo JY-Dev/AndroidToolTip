@@ -7,7 +7,7 @@
     android:paddingBottom="9dp"
     tools:context=".MainActivity">
 
-    <com.example.androidtooltip.ToolTipView
+    <com.example.androidtooltip.TimerTooltipView
         android:id="@+id/tooltip_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +15,7 @@
         app:tooltipColor="@color/purple_200"
         app:tooltipHeadRatio="0.5"
         app:tooltipPadding="12dp"
+        app:timerSecond="3"
         app:direction="Bottom"
         app:tooltipTextSize="14dp"
         app:tooltipText="전일 대비 등락은 24시간 전의 시세와 비교하여 표시되며 해당 영역은 []의 시세 데이터를 반영해 1분 주기로 업데이트됩니다.(2021.11.04 01:11) "
