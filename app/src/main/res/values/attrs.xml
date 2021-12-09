@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ToolTipView">
+        <attr name="direction" format="enum">
+            <enum name="Top" value="0"/>
+            <enum name="Bottom" value="1"/>
+            <enum name="Light" value="2"/>
+            <enum name="Right" value="3"/>
+        </attr>
+        <attr name="tooltipText" format="string"/>
+        <attr name="tooltipTextSize" format="dimension"/>
+        <attr name="tooltipPadding" format="dimension"/>
+        <attr name="triangleHorizontalRatio" format="float"/>
+    </declare-styleable>
+</resources>

@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/triangle"
+        android:layout_width="9dp"
+        android:layout_height="6dp"
+        android:rotation="0"
+        android:background="@drawable/ic_triangle"/>
 
     <TextView
         android:id="@+id/tooltip_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:background="@drawable/white_square"
-        android:maxWidth="265dp"
-        android:text="전일 대비 등락은 24시간 전의 시세와 비교하여 표시되며 해당 영역은 []의 시세 데이터를 반영해 1분 주기로 업데이트됩니다.(2021.11.04 01:11) "
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:background="@drawable/tooltip_background"
+        android:maxWidth="265dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
