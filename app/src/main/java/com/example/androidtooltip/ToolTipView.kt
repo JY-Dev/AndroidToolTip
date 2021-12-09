@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.marginTop
 
 class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null) :
     FrameLayout(context, attributeSet) {
@@ -24,61 +25,92 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
             else -> Direction.RIGHT
         }
     }
-    private val triangleHorizontalRatio =
-        attr.getFloat(R.styleable.ToolTipView_triangleHorizontalRatio, 0f)
+    private val tooltipHeadRatio =
+        attr.getFloat(R.styleable.ToolTipView_tooltipHeadRatio, 0f)
     private val tooltipPadding = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipPadding,0)
 
     private val tooltipView = FrameLayout(context).apply {
         visibility = GONE
-    }
+        setOnClickListener {
+            setTooltipVisibility()
+        }
+    }.also(::addView)
     private val tooltipTextView = makeToolTipView()
     private val tooltipHeadView = makeTooltipHeadView()
 
     private var isVisible = false
 
-    private val toolTipOnGlobalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
+    private val onGlobalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             tooltipView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            setTooltipHeadRatio()
+            setTooltipHeadPosition()
+            setRotationTooltipHeadView()
+            setMarginTooltipTextView()
         }
     }
 
-    private val headerOnGlobalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            tooltipHeadView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            rotationHeadView()
+    private fun setTooltipHeadRatio(){
+        val maxPosition = when(direction){
+            Direction.TOP,Direction.BOTTOM -> tooltipTextView.width
+            Direction.RIGHT,Direction.LEFT -> tooltipTextView.height
+        }
+        val tooltipHeadPosition = maxPosition * tooltipHeadRatio - when(direction){
+            Direction.TOP,Direction.BOTTOM -> tooltipHeadView.width/2
+            Direction.RIGHT,Direction.LEFT -> tooltipHeadView.height/2
+        }
+        when(direction){
+            Direction.TOP,Direction.BOTTOM -> tooltipHeadView.x = tooltipHeadPosition
+            Direction.RIGHT,Direction.LEFT -> tooltipHeadView.y = tooltipHeadPosition
         }
     }
 
-    init {
-        addView(tooltipView)
+    private fun setRotationTooltipHeadView() {
+        val rotation = when (direction) {
+            Direction.BOTTOM -> 180.0f
+            Direction.LEFT -> -90.0f
+            Direction.RIGHT -> 90.0f
+            Direction.TOP -> 0.0f
+        }
+        tooltipHeadView.rotation = rotation
     }
 
-    /*private fun setDirectionTop() {
-        val params = binding.tooltipText.layoutParams as LinearLayout.LayoutParams
-        params.topMargin = binding.triangle.height
-        binding.tooltipText.y = binding.triangle.height.toFloat()
-        binding.triangle.x = getPositionXByRatio(triangleHorizontalRatio)
-        binding.triangle.y = 0f
-        binding.triangle.rotation = 0f
+    private fun setTooltipHeadPosition(){
+        when(direction){
+            Direction.BOTTOM -> tooltipHeadView.y = tooltipTextView.height.toFloat()
+            Direction.LEFT -> tooltipHeadView.x = 0f
+            Direction.RIGHT -> tooltipHeadView.x = tooltipTextView.width.toFloat() - tooltipHeadView.height/2
+            Direction.TOP -> tooltipHeadView.y = 0f
+        }
     }
 
-    private fun setDirectionBottom() {
-        binding.tooltipText.y = 0f
-        binding.triangle.x = getPositionXByRatio(triangleHorizontalRatio)
-        binding.triangle.y = binding.tooltipText.height.toFloat()
-        binding.triangle.rotation = 180f
+    private fun setMarginTooltipTextView(){
+        val tooltipLayoutParams = tooltipTextView.layoutParams as LayoutParams
+        val margin = tooltipHeadView.height
+        when(direction){
+            Direction.BOTTOM -> tooltipLayoutParams.bottomMargin = margin
+            Direction.LEFT -> tooltipLayoutParams.leftMargin = margin
+            Direction.RIGHT -> tooltipLayoutParams.rightMargin = margin
+            Direction.TOP -> tooltipLayoutParams.topMargin = margin
+        }
+        tooltipTextView.requestLayout()
     }
-*/
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
     private fun makeToolTipView(): TextView {
         return TextView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT
             )
+            text = toolTipText
             setPadding(tooltipPadding,tooltipPadding,tooltipPadding,tooltipPadding)
             setTextSize(TypedValue.COMPLEX_UNIT_PX, toolTipTextSize)
             setBackgroundResource(R.drawable.tooltip_background)
-            text = "전일 대비 등락은 24시간 전의 시세와 비교하여\\n표시되며 해당 영역은 []의 시세 데이터를 반영해\\n1분 주기로 업데이트됩니다.(2021.11.04 01:11) "
         }.also(tooltipView::addView)
     }
 
@@ -92,20 +124,6 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
         }.also(tooltipView::addView)
     }
 
-    private fun rotationHeadView() {
-        when (direction) {
-            Direction.BOTTOM -> tooltipHeadView.rotation = 180.0f
-            Direction.LEFT -> tooltipHeadView.rotation = -90.0f
-            Direction.RIGHT -> tooltipHeadView.rotation = 90.0f
-            else -> tooltipHeadView.rotation = 0.0f
-        }
-    }
-
-    /*private fun getPositionXByRatio(ratio: Float): Float {
-        val wholeWidth = binding.tooltipText.width
-        return wholeWidth * ratio - binding.triangle.width / 2
-    }*/
-
     fun setTooltipText(text: String) {
         tooltipTextView.text = text
     }
@@ -114,18 +132,6 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
         tooltipView.visibility = if (isVisible) View.GONE else View.VISIBLE
         isVisible = !isVisible
     }
-
-    data class ToolTipCoordinate(
-        val x: Float,
-        val y: Float,
-        val width: Int,
-        val height: Int
-    )
-
-    data class HeaderCoordinate(
-        val width: Int,
-        val height: Int
-    )
 
     enum class Direction{
         TOP,BOTTOM,LEFT,RIGHT
