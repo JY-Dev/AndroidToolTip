@@ -9,7 +9,11 @@
         </attr>
         <attr name="tooltipText" format="string"/>
         <attr name="tooltipTextSize" format="dimension"/>
+        <attr name="tooltipTextColor" format="color"/>
         <attr name="tooltipPadding" format="dimension"/>
         <attr name="tooltipHeadRatio" format="float"/>
+        <attr name="tooltipColor" format="color"/>
+        <attr name="tooltipHeadWidth" format="dimension"/>
+        <attr name="tooltipHeadHeight" format="dimension"/>
     </declare-styleable>
 </resources>

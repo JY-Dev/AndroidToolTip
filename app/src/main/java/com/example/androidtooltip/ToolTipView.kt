@@ -1,6 +1,8 @@
 package com.example.androidtooltip
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.VectorDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -8,15 +10,16 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.marginTop
+import androidx.core.content.ContextCompat
 
 class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null) :
     FrameLayout(context, attributeSet) {
     private val attr =
         context.theme.obtainStyledAttributes(attributeSet, R.styleable.ToolTipView, 0, 0)
-    private val toolTipText = attr.getString(R.styleable.ToolTipView_tooltipText)
-    private val toolTipTextSize =
+    private val tooltipViewText = attr.getString(R.styleable.ToolTipView_tooltipText)
+    private val tooltipTextSize =
         attr.getDimension(R.styleable.ToolTipView_tooltipTextSize, 0f)
+    private val tooltipTextColor = attr.getColor(R.styleable.ToolTipView_tooltipTextColor,0x000000)
     private val direction = attr.getInt(R.styleable.ToolTipView_direction, 0).let {
         when(it){
             0 -> Direction.TOP
@@ -28,6 +31,15 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
     private val tooltipHeadRatio =
         attr.getFloat(R.styleable.ToolTipView_tooltipHeadRatio, 0f)
     private val tooltipPadding = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipPadding,0)
+    private val tooltipColor = attr.getColor(R.styleable.ToolTipView_tooltipColor,0x000000)
+    private val tooltipDrawable = (ContextCompat.getDrawable(context,R.drawable.tooltip_background) as GradientDrawable).apply {
+        setColor(tooltipColor)
+    }
+    private val tooltipHeadDrawable = (ContextCompat.getDrawable(context,R.drawable.ic_triangle) as VectorDrawable).apply {
+        setTint(tooltipColor)
+    }
+    private val tooltipHeadWidth = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipHeadWidth,9.toDp)
+    private val tooltipHeadHeight = attr.getDimensionPixelSize(R.styleable.ToolTipView_tooltipHeadHeight,6.toDp)
 
     private val tooltipView = FrameLayout(context).apply {
         visibility = GONE
@@ -107,20 +119,21 @@ class ToolTipView @JvmOverloads constructor(context: Context, attributeSet: Attr
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT
             )
-            text = toolTipText
+            text = tooltipViewText
+            setTextColor(tooltipTextColor)
             setPadding(tooltipPadding,tooltipPadding,tooltipPadding,tooltipPadding)
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, toolTipTextSize)
-            setBackgroundResource(R.drawable.tooltip_background)
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, tooltipTextSize)
+            background = tooltipDrawable
         }.also(tooltipView::addView)
     }
 
     private fun makeTooltipHeadView(): ImageView {
         return ImageView(context).apply {
             layoutParams = LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
+                tooltipHeadWidth,
+                tooltipHeadHeight
             )
-            setBackgroundResource(R.drawable.ic_triangle)
+            background = tooltipHeadDrawable
         }.also(tooltipView::addView)
     }
 
